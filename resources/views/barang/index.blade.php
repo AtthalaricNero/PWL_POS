@@ -6,6 +6,8 @@
             <h3>{{ $page->title }}</h3>
             <div class="card-tools">
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
+                <button onclick="modalAction('{{ url('/barang/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah
+                    Ajax</button>
             </div>
         </div>
         <div class="card-body">
@@ -46,6 +48,8 @@
             </table>
         </div>
     </div>
+    <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static"
+        data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 
 @push('css')
@@ -53,69 +57,76 @@
 
 @push('js')
     <script>
-        $(document).ready(function() {
-            var databarang = $('#table_barang').DataTable({
+        function modalAction(url = '') {
+            $('#myModal').load(url, function () {
+                $('#myModal').modal('show');
+            });
+        }
+
+        var dataBarang;
+        $(document).ready(function () {
+                dataBarang = $('#table_barang').DataTable({
                 serverSide: true,
                 ajax: {
                     "url": "{{ url('barang/list') }}",
                     "dataType": "json",
                     "type": "POST",
-                    "data": function(data) {
+                    "data": function (data) {
                         data.kategori_id = $('#kategori_id').val();
                     }
                 },
                 columns: [{
-                        data: "DT_RowIndex",
-                        className: "text-center",
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: "barang_kode",
-                        className: "",
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "barang_nama",
-                        className: "",
-                        orderable: true,
-                        searchable: true
-                    },
-                    {
-                        data: "harga_beli",
-                        className: "",
-                        orderable: true,
-                        searchable: true,
-                        render: function(data, type, row, meta) {
-                            return formatRupiah(data);
-                        }
-                    },
-                    {
-                        data: "harga_jual",
-                        className: "",
-                        orderable: true,
-                        searchable: true,
-                        render: function(data, type, row, meta) {
-                            return formatRupiah(data);
-                        }
-                    },
-                    {
-                        data: "kategori.kategori_nama",
-                        className: "",
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: "aksi",
-                        className: "",
-                        orderable: false,
-                        searchable: false
+                    data: "DT_RowIndex",
+                    className: "text-center",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "barang_kode",
+                    className: "",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "barang_nama",
+                    className: "",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "harga_beli",
+                    className: "",
+                    orderable: true,
+                    searchable: true,
+                    render: function (data, type, row, meta) {
+                        return formatRupiah(data);
                     }
+                },
+                {
+                    data: "harga_jual",
+                    className: "",
+                    orderable: true,
+                    searchable: true,
+                    render: function (data, type, row, meta) {
+                        return formatRupiah(data);
+                    }
+                },
+                {
+                    data: "kategori.kategori_nama",
+                    className: "",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "aksi",
+                    className: "",
+                    orderable: false,
+                    searchable: false
+                }
                 ]
             });
 
-            $('#kategori_id').on('change', function() {
+            $('#kategori_id').on('change', function () {
                 databarang.ajax.reload();
             });
 
