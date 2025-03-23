@@ -3,9 +3,11 @@
 @section('content')
     <div class="card card-outline card-primary">
         <div class="card-header">
-            <h3>{{$page -> title}}</h3>
+            <h3>{{$page->title}}</h3>
             <div class="card-tools">
                 <a class="btn btn-sm btn-primary mt-1" href="{{url('supplier/create')}}">Tambah</a>
+                <button onclick="modalAction('{{ url('supplier/create_ajax')}}')" class="btn btn-sm btn-success mt-1">Tambah
+                    Ajax</button>
             </div>
         </div>
         <div class="card-body">
@@ -15,8 +17,8 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{session('error')}}</div>
             @endif
-            
-            <table class="table table-bordered table-striped table-hover table-sm" id="table_level">
+
+            <table class="table table-bordered table-striped table-hover table-sm" id="table_supplier">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -29,6 +31,8 @@
             </table>
         </div>
     </div>
+    <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static"
+        data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 
 @push('css')
@@ -36,8 +40,15 @@
 
 @push('js')
     <script>
-        $(document).ready(function() {
-            var dataSupplier = $('#table_level').DataTable({
+        function modalAction(url = '') {
+            $('#myModal').load(url, function () {
+                $('#myModal').modal('show');
+            });
+        }
+
+        var dataSupplier;
+        $(document).ready(function () {
+                dataSupplier = $('#table_supplier').DataTable({
                 serverSide: true,
                 ajax: {
                     "url": "{{url('supplier/list')}}",
