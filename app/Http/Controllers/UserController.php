@@ -45,7 +45,7 @@ class UserController extends Controller
             ->addIndexColumn()
             ->addColumn('aksi', function ($user) { // Menambahkan kolom aksi
 
-                    $btn = '<a href="' . url('/user/' . $user->user_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                $btn = '<a href="' . url('/user/' . $user->user_id) . '" class="btn btn-info btn-sm">Detail</a> ';
                 //     $btn .= '<a href="' . url('/user/' . $user->user_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
                 //     $btn .= '<form class="d-inline-block" method="POST" action="' .
                 //         url('/user/' . $user->user_id) . '">' .
@@ -191,7 +191,7 @@ class UserController extends Controller
 
     public function store_ajax(Request $request)
     {
-        // cek apakah request berupa ajax
+        // Cek apakah request berupa AJAX
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'level_id' => 'required|integer',
@@ -200,24 +200,32 @@ class UserController extends Controller
                 'password' => 'required|string|min:6',
             ];
 
-            // use Illuminate\Support\Facades\Validator;
+            // Validasi input
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => false, // response status, false: error/gagal, true: berhasil
+                    'status' => false, // false: error/gagal, true: berhasil
                     'message' => 'Validasi Gagal',
-                    'errors' => $validator->errors(), // pesan error validasi
+                    'errors' => $validator->errors(), // Pesan error validasi
                 ]);
             }
 
-            UserModel::create($request->all());
+            // Simpan user dengan password yang sudah di-hash
+            UserModel::create([
+                'level_id' => $request->level_id,
+                'username' => $request->username,
+                'nama' => $request->nama,
+                'password' => Hash::make($request->password),
+            ]);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Data user berhasil disimpan'
             ]);
         }
-        redirect('/');
+
+        return redirect('/');
     }
 
     // Menampilkan halaman form edit user ajax
