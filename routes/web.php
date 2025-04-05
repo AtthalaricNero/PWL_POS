@@ -7,6 +7,7 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\BarangController;
+use Illuminate\Routing\Controller\Middleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,25 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware(['auth'])->group(function () { // artinya semua route di dalam group ini harus login dulu
     Route::get('/', [WelcomeController::class, 'index']);
+
+    Route::middleware(['authorize:ADM'])->group(function () {
+        Route::group(['prefix' => 'level'], function () {
+            Route::get('/', [LevelController::class, 'index']); // menampilkan halaman awal user
+            Route::post('/list', [LevelController::class, 'list']); // menampilkan data user dalam bentuk json untuk datatables
+            Route::get('/create', [LevelController::class, 'create']); // menampilkan halaman form tambah user
+            Route::post('/', [LevelController::class, 'store']); // menyimpan data level baru
+            Route::get('/create_ajax', [LevelController::class, 'create_ajax']); // Menampilkan halaman form tambah level Ajax
+            Route::post('/ajax', [LevelController::class, 'store_ajax']); // Menyimpan data user baru Ajax
+            Route::get('/{id}', [LevelController::class, 'show']); // menampilkan detail user
+            Route::get('/{id}/edit', [LevelController::class, 'edit']); // menampilkan halaman form edit level
+            Route::put('/{id}', [LevelController::class, 'update']); // menyimpan perubahan data level
+            Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']); // menampilkan halaman form edit level Ajax
+            Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']); // menyimpan perubahan data level Ajax
+            Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']); // Untuk tampilkan form confirm delete level Ajax
+            Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); // Untuk hapus data level Ajax
+            Route::delete('/{id}', [LevelController::class, 'destroy']); // menghapus data user
+        });
+    });
 });
 
 Route::group(['prefix' => 'user'], function () {
@@ -47,22 +67,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::delete('/{id}', [UserController::class, 'destroy']); //  menghapus data user
 });
 
-Route::group(['prefix' => 'level'], function () {
-    Route::get('/', [LevelController::class, 'index']); // menampilkan halaman awal user
-    Route::post('/list', [LevelController::class, 'list']); // menampilkan data user dalam bentuk json untuk datatables
-    Route::get('/create', [LevelController::class, 'create']); // menampilkan halaman form tambah user
-    Route::post('/', [LevelController::class, 'store']); // menyimpan data level baru
-    Route::get('/create_ajax', [LevelController::class, 'create_ajax']); // Menampilkan halaman form tambah level Ajax
-    Route::post('/ajax', [LevelController::class, 'store_ajax']); // Menyimpan data user baru Ajax
-    Route::get('/{id}', [LevelController::class, 'show']); // menampilkan detail user
-    Route::get('/{id}/edit', [LevelController::class, 'edit']); // menampilkan halaman form edit level
-    Route::put('/{id}', [LevelController::class, 'update']); // menyimpan perubahan data level
-    Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']); // menampilkan halaman form edit level Ajax
-    Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']); // menyimpan perubahan data level Ajax
-    Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']); // Untuk tampilkan form confirm delete level Ajax
-    Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); // Untuk hapus data level Ajax
-    Route::delete('/{id}', [LevelController::class, 'destroy']); // menghapus data user
-});
+
 
 Route::group(['prefix' => 'kategori'], function () {
     Route::get('/', [KategoriController::class, 'index']); // menampilkan halaman awal user
