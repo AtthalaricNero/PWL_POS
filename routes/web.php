@@ -7,6 +7,7 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Routing\Controller\Middleware;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,7 @@ Route::post('register', [AuthController::class, 'postregister']);
 
 Route::middleware(['auth'])->group(function () { // artinya semua route di dalam group ini harus login dulu
     Route::get('/', [WelcomeController::class, 'index']);
+    Route::post('/profile/update', [ProfileController::class, 'updatePhoto'])->name('profile.updatePhoto');
 
     Route::middleware(['authorize:ADM'])->group(function () {
         Route::group(['prefix' => 'level'], function () {

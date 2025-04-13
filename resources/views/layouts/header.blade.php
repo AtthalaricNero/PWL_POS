@@ -1,4 +1,37 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- SweetAlert2 Pop-up for Success / Error -->
+    @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: '{{ session('success') }}',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+    @endif
+
+
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -136,4 +169,101 @@
             </a>
         </li>
     </ul>
+
+    <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link" href="#" data-toggle="modal" data-target="#profileModal">
+                @php
+                    $foto = Auth::user()->foto ? asset('storage/profile/' . Auth::user()->foto) : asset('default-avatar.png');
+                    $nama = Auth::user()->nama;
+                @endphp
+
+                <img src="{{ $foto }}" alt="User Avatar" class="img-size-32 img-circle"
+                    style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
+                <span class="ml-2">{{ $nama }}</span>
+            </a>
+        </li>
+    </ul>
 </nav>
+
+<!-- Modal Profile -->
+<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="profileForm" action="{{ route('profile.updatePhoto') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileModalLabel">Profile Anda</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="{{ $foto }}" alt="Foto Profil" class="img-circle mb-3" width="100" height="100"
+                        id="current-photo">
+                    <h5>{{ Auth::user()->nama }}</h5>
+
+                    <div class="form-group mt-3">
+                        <!-- Ganti name="photo" menjadi name="foto" -->
+                        <input type="file" name="foto" accept="image/*" class="form-control-file" id="photo-input">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btn-block">Simpan Perubahan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#profileForm').on('submit', function (e) {
+                e.preventDefault();
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '{{ route('profile.updatePhoto') }}',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            // Update the photo preview
+                            $('#current-photo').attr('src', response.photo);
+                            // Show success message using SweetAlert2
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: response.message || 'Foto profil berhasil diperbarui.',
+                            });
+                            // Close the modal
+                            $('#profileModal').modal('hide');
+                        } else {
+                            // Show error message using SweetAlert2
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: response.message || 'Terjadi kesalahan saat mengubah foto. Coba lagi.',
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        // Show error message using SweetAlert2 when AJAX request fails
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: 'Terjadi kesalahan saat mengirim permintaan. Coba lagi.',
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+@endpush
