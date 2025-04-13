@@ -5,9 +5,14 @@
         <div class="card-header">
             <h3>{{$page->title}}</h3>
             <div class="card-tools">
-                <button onclick="modalAction('{{ url('/kategori/import') }}')" class="btn btn-sm btn-info mt-1">Import Kategori</button>
-                <a href="{{ url('/kategori/export_excel') }}" class="btn btn-sm btn-warning mt-1"><i class="fa fa-fileexcel"></i> Export
-                    Barang</a>
+                <button onclick="modalAction('{{ url('/kategori/import') }}')" class="btn btn-sm btn-info mt-1">Import
+                    Kategori</button>
+                <a href="{{ url('/kategori/export_excel') }}" class="btn btn-sm btn-warning mt-1"><i
+                        class="fa fa-fileexcel"></i> Export
+                    Kategori Excel</a>
+                <a href="{{ url('/kategori/export_pdf') }}" class="btn btn-sm btn-danger mt-1"><i class="fa fa-filepdf"></i>
+                    Export
+                    Kategori PDF</a>
                 <a class="btn btn-sm btn-primary mt-1" href="{{url('kategori/create')}}">Tambah</a>
                 <button onclick="modalAction('{{ url('kategori/create_ajax')}}')" class="btn btn-sm btn-success mt-1">Tambah
                     Ajax</button>
@@ -47,10 +52,10 @@
                 $('#myModal').modal('show');
             });
         }
-        
+
         var dataKategori;
         $(document).ready(function () {
-                dataKategori = $('#table_kategori').DataTable({
+            dataKategori = $('#table_kategori').DataTable({
                 serverSide: true,
                 ajax: {
                     "url": "{{url('kategori/list')}}",

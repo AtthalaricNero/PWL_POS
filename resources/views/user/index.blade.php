@@ -5,9 +5,14 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <button onclick="modalAction('{{ url('/user/import') }}')" class="btn btn-sm btn-info mt-1">Import User</button>
-                <a href="{{ url('/user/export_excel') }}" class="btn btn-sm btn-warning mt-1"><i class="fa fa-fileexcel"></i> Export
-                    Barang</a>
+                <button onclick="modalAction('{{ url('/user/import') }}')" class="btn btn-sm btn-info mt-1">Import
+                    User</button>
+                <a href="{{ url('/user/export_excel') }}" class="btn btn-sm btn-warning mt-1"><i
+                        class="fa fa-fileexcel"></i> Export
+                    User Excel</a>
+                <a href="{{ url('/user/export_pdf') }}" class="btn btn-sm btn-danger mt-1"><i class="fa fa-filepdf"></i>
+                    Export
+                    User PDF</a>
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('user/create') }}">Tambah</a>
                 <button onclick="modalAction('{{ url('user/create_ajax')}}')" class="btn btn-sm btn-success mt-1">Tambah
                     Ajax</button>
@@ -66,7 +71,7 @@
         }
         var dataUser;
         $(document).ready(function () {
-                dataUser = $('#table_user').DataTable({
+            dataUser = $('#table_user').DataTable({
                 // serverSide: true, jika ingin menggunakan server side processing
                 serverSide: true,
                 ajax: {

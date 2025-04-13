@@ -5,9 +5,14 @@
         <div class="card-header">
             <h3>{{$page->title}}</h3>
             <div class="card-tools">
-                <button onclick="modalAction('{{ url('/level/import') }}')" class="btn btn-sm btn-info mt-1">Import Level</button>
-                <a href="{{ url('/level/export_excel') }}" class="btn btn-sm btn-warning mt-1"><i class="fa fa-fileexcel"></i> Export
-                    Barang</a>
+                <button onclick="modalAction('{{ url('/level/import') }}')" class="btn btn-sm btn-info mt-1">Import
+                    Level</button>
+                <a href="{{ url('/level/export_excel') }}" class="btn btn-sm btn-warning mt-1"><i
+                        class="fa fa-fileexcel"></i> Export
+                    Level Excel</a>
+                <a href="{{ url('/level/export_pdf') }}" class="btn btn-sm btn-danger mt-1"><i class="fa fa-filepdf"></i>
+                    Export
+                    Level PDF</a>
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('level/create') }}">Tambah</a>
                 <button onclick="modalAction('{{ url('level/create_ajax')}}')" class="btn btn-sm btn-success mt-1">Tambah
                     Ajax</button>
@@ -49,7 +54,7 @@
         }
         var dataLevel;
         $(document).ready(function () {
-                dataLevel = $('#table_level').DataTable({
+            dataLevel = $('#table_level').DataTable({
                 serverSide: true,
                 ajax: {
                     "url": "{{url('level/list')}}",

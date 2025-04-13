@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 
 class SupplierController extends Controller
@@ -379,5 +381,22 @@ class SupplierController extends Controller
 
         $writer->save('php://output');
         exit;
+    }
+
+    public function export_pdf()
+    {
+        // Mengambil data supplier
+        $supplier = SupplierModel::select('supplier_id', 'supplier_kode', 'supplier_nama', 'supplier_alamat')
+            ->orderBy('supplier_kode')
+            ->get();
+
+        // Membuat PDF menggunakan view
+        $pdf = Pdf::loadView('supplier.export_pdf', ['supplier' => $supplier]);
+        $pdf->setPaper('a4', 'potrait'); // Set ukuran kertas dan orientasi
+        $pdf->setOption("isRemoteEnabled", true); // Set true jika ada gambar dari URL
+        $pdf->render();
+
+        // Mengembalikan file PDF untuk diunduh
+        return $pdf->stream('Data Supplier ' . date('Y-m-d_H-i-s') . '.pdf');
     }
 }

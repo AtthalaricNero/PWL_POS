@@ -10,6 +10,8 @@ use Monolog\Level;
 use Yajra\DataTables\Facades\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 
 class LevelController extends Controller
@@ -371,5 +373,22 @@ class LevelController extends Controller
 
         $writer->save('php://output');
         exit;
+    }
+
+    public function export_pdf()
+    {
+        // Mengambil data level
+        $level = LevelModel::select('level_id', 'level_kode', 'level_nama')
+            ->orderBy('level_kode')
+            ->get();
+
+        // Membuat PDF menggunakan view
+        $pdf = Pdf::loadView('level.export_pdf', ['level' => $level]);
+        $pdf->setPaper('a4', 'potrait'); // Set ukuran kertas dan orientasi
+        $pdf->setOption("isRemoteEnabled", true); // Set true jika ada gambar dari URL
+        $pdf->render();
+
+        // Mengembalikan file PDF untuk diunduh
+        return $pdf->stream('Data Level ' . date('Y-m-d_H-i-s') . '.pdf');
     }
 }

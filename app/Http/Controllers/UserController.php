@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class UserController extends Controller
@@ -417,5 +418,22 @@ class UserController extends Controller
 
         $writer->save('php://output');
         exit;
+    }
+
+    public function export_pdf()
+    {
+        // Mengambil data user
+        $user = UserModel::select('user_id', 'username', 'nama', 'level_id')
+            ->orderBy('username')
+            ->get();
+
+        // Membuat PDF menggunakan view
+        $pdf = Pdf::loadView('user.export_pdf', ['user' => $user]);
+        $pdf->setPaper('a4', 'potrait'); // Set ukuran kertas dan orientasi
+        $pdf->setOption("isRemoteEnabled", true); // Set true jika ada gambar dari URL
+        $pdf->render();
+
+        // Mengembalikan file PDF untuk diunduh
+        return $pdf->stream('Data User ' . date('Y-m-d_H-i-s') . '.pdf');
     }
 }
