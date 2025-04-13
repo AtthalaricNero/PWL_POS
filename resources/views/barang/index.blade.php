@@ -5,6 +5,7 @@
         <div class="card-header">
             <h3>{{ $page->title }}</h3>
             <div class="card-tools">
+                <button onclick="modalAction('{{ url('/barang/import') }}')" class="btn btn-sm btn-info mt-1">Import Barang</button>
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
                 <button onclick="modalAction('{{ url('/barang/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah
                     Ajax</button>
@@ -65,7 +66,7 @@
 
         var dataBarang;
         $(document).ready(function () {
-                dataBarang = $('#table_barang').DataTable({
+            dataBarang = $('#table_barang').DataTable({
                 serverSide: true,
                 ajax: {
                     "url": "{{ url('barang/list') }}",
@@ -127,7 +128,7 @@
             });
 
             $('#kategori_id').on('change', function () {
-                databarang.ajax.reload();
+                dataBarang.ajax.reload();
             });
 
             function formatRupiah(angka) {
