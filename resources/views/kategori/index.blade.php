@@ -10,7 +10,7 @@
                 <a href="{{ url('/kategori/export_excel') }}" class="btn btn-sm btn-warning mt-1"><i
                         class="fa fa-fileexcel"></i> Export
                     Kategori Excel</a>
-                <a href="{{ url('/kategori/export_pdf') }}" class="btn btn-sm btn-danger mt-1"><i class="fa fa-filepdf"></i>
+                <a href="{{ url('/kategori/export_pdf') }}"  target="_blank" class="btn btn-sm btn-danger mt-1"><i class="fa fa-filepdf"></i>
                     Export
                     Kategori PDF</a>
                 <a class="btn btn-sm btn-primary mt-1" href="{{url('kategori/create')}}">Tambah</a>

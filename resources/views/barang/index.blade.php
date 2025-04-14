@@ -10,7 +10,7 @@
                 <a href="{{ url('/barang/export_excel') }}" class="btn btn-sm btn-warning mt-1"><i
                         class="fa fa-fileexcel"></i> Export
                     Barang Excel</a>
-                <a href="{{ url('/barang/export_pdf') }}" class="btn btn-sm btn-danger mt-1"><i class="fa fa-filepdf"></i> Export
+                <a href="{{ url('/barang/export_pdf') }}"  target="_blank" class="btn btn-sm btn-danger mt-1"><i class="fa fa-filepdf"></i> Export
                     Barang PDF</a>
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
                 <button onclick="modalAction('{{ url('/barang/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah

@@ -10,7 +10,7 @@
                 <a href="{{ url('/level/export_excel') }}" class="btn btn-sm btn-warning mt-1"><i
                         class="fa fa-fileexcel"></i> Export
                     Level Excel</a>
-                <a href="{{ url('/level/export_pdf') }}" class="btn btn-sm btn-danger mt-1"><i class="fa fa-filepdf"></i>
+                <a href="{{ url('/level/export_pdf') }}" target="_blank" class="btn btn-sm btn-danger mt-1"><i class="fa fa-filepdf"></i>
                     Export
                     Level PDF</a>
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('level/create') }}">Tambah</a>
