@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserModel extends Authenticatable implements JWTSubject
@@ -25,7 +26,7 @@ class UserModel extends Authenticatable implements JWTSubject
     protected $table = 'm_user';
     protected $primaryKey = 'user_id';
 
-    protected $fillable = ['username', 'nama', 'password', 'level_id', 'foto','created_at', 'updated_at'];
+    protected $fillable = ['username', 'nama', 'password', 'level_id', 'foto', 'created_at', 'updated_at'];
 
     protected $hidden = ['password'];
 
@@ -41,17 +42,27 @@ class UserModel extends Authenticatable implements JWTSubject
     }
 
     // Mendapatkan nama role
-    public function getRoleName() {
+    public function getRoleName()
+    {
         return $this->level->level_nama;
     }
 
     // cek apakah user memiliki role tertentu
-    public function hasRole($role) {
+    public function hasRole($role)
+    {
         return $this->level->level_kode == $role;
     }
 
     // mendapatkan kode Role
-    public function getRole() {
+    public function getRole()
+    {
         return $this->level->level_kode;
+    }
+
+    protected function foto(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ? asset('storage/profile/' . $value) : null,
+        );
     }
 }
